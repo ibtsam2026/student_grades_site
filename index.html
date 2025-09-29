@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <title>عرض درجات الطالبات</title>
+    <title>درجات الطالبات</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>نظام عرض درجات الطالبات</h1>
-        <input type="text" id="student-id" placeholder="أدخلي رقم السجل المدني">
-        <button onclick="searchStudent()">عرض الدرجات</button>
+        <h1>عرض درجات الطالبات</h1>
+        <input type="text" id="studentId" placeholder="أدخل رقم السجل المدني">
+        <button onclick="searchGrades()">عرض الدرجات</button>
         <div id="result"></div>
     </div>
     <script src="script.js"></script>
