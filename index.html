@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -66,9 +66,25 @@
     font-family: inherit;
     transition: all 0.2s ease;
   }
-  .option-btn:hover {
+  .option-btn:hover:not(:disabled) {
     background: var(--hover-bg);
     border-color: var(--secondary-color);
+  }
+  .option-btn:disabled {
+    cursor: not-allowed;
+  }
+  /* تنسيق الإجابة الصحيحة */
+  .option-btn.correct {
+    background-color: #d4edda !important;
+    border-color: #28a745 !important;
+    color: #155724;
+    font-weight: bold;
+  }
+  /* تنسيق الإجابة الخاطئة */
+  .option-btn.wrong {
+    background-color: #f8d7da !important;
+    border-color: #dc3545 !important;
+    color: #721c24;
   }
   #result-container {
     display: none;
@@ -185,24 +201,38 @@ function loadQuestion() {
     const btn = document.createElement("button");
     btn.classList.add("option-btn");
     btn.innerText = opt;
-    // الانتقال المباشر فور الاختيار دون عرض التغذية الراجعة
-    btn.onclick = () => handleAnswer(index);
+    btn.onclick = () => handleAnswer(index, btn);
     optionsContainer.appendChild(btn);
   });
 }
 
-function handleAnswer(selectedIndex) {
-  if (selectedIndex === quizData[currentQuestionIndex].answer) {
+function handleAnswer(selectedIndex, clickedBtn) {
+  // إيقاف تفعيل جميع الأزرار لمنع النقر المتعدد
+  const allButtons = optionsContainer.querySelectorAll(".option-btn");
+  allButtons.forEach(btn => btn.disabled = true);
+
+  const currentQ = quizData[currentQuestionIndex];
+  const correctIndex = currentQ.answer;
+
+  // التحقق من الإجابة وتطبيق الفيد باك
+  if (selectedIndex === correctIndex) {
+    clickedBtn.classList.add("correct");
     score++;
-  }
-  
-  currentQuestionIndex++;
-  
-  if (currentQuestionIndex < quizData.length) {
-    loadQuestion();
   } else {
-    showResults();
+    clickedBtn.classList.add("wrong");
+    // تظليل الإجابة الصحيحة باللون الأخضر لتصحيح المعلومة
+    allButtons[correctIndex].classList.add("correct");
   }
+  
+  // الانتظار لمدة 1.5 ثانية (1500 ملي ثانية) ثم الانتقال للسؤال التالي
+  setTimeout(() => {
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizData.length) {
+      loadQuestion();
+    } else {
+      showResults();
+    }
+  }, 1500);
 }
 
 function showResults() {
